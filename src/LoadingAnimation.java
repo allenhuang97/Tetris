@@ -10,6 +10,7 @@ public class LoadingAnimation extends Applet implements Runnable{
 	private Rectangle []loadRect = new Rectangle[8];
 	private int [][] rectProperties = new int [loadRect.length][2];
 	private boolean start = true;
+	private boolean end = false;
 	private int startNum = 1;
 	private int startCount = 0;
 	private int loadTime = 0;
@@ -55,7 +56,7 @@ public class LoadingAnimation extends Applet implements Runnable{
 	}
 
 	public void run(){
-		while(true){
+		while(end == false){
 			if (start == true){
 				if(startCount == 40){
 					startNum++;
@@ -83,8 +84,9 @@ public class LoadingAnimation extends Applet implements Runnable{
 					break;
 				}
 			}
-			loadTime++;
 			reDirect();
+			if(loadTime/75 != loadRect.length)
+				loadTime++;
 			repaint();
 			try {
 				Thread.sleep(10);
@@ -98,20 +100,32 @@ public class LoadingAnimation extends Applet implements Runnable{
 		for(int i = 0; i < startNum; i ++){
 			switch(rectProperties[i][0]){
 			case 0:
-				if(loadRect[i].y == 0)
+				if(loadRect[i].y == 0){
 					rectProperties[i][0] = 3;
+					if(loadTime/75 == loadRect.length)
+						end = true;
+				}
 				break;
 			case 1:
-				if(loadRect[i].x == 80)
+				if(loadRect[i].x == 80){
 					rectProperties[i][0] = 0;
+					if(loadTime/75 == loadRect.length)
+						end = true;
+				}
 				break;
 			case 2:
-				if(loadRect[i].y == 80)
+				if(loadRect[i].y == 80){
 					rectProperties[i][0] = 1;
+					if(loadTime/75 == loadRect.length)
+						end = true;
+				}
 				break;
 			case 3:
-				if(loadRect[i].x == 0)
+				if(loadRect[i].x == 0){
 					rectProperties[i][0] = 2;
+					if(loadTime/75 == loadRect.length)
+						end = true;
+				}
 				break;
 			}
 		}
@@ -126,8 +140,12 @@ public class LoadingAnimation extends Applet implements Runnable{
 				g.setColor(Color.GREEN);
 			g.fillRect(loadRect[i].x, loadRect[i].y, loadRect[i].width, loadRect[i].height);
 			g.setColor(Color.BLACK);
-			g.drawRect(loadRect[i].x, loadRect[i].y, loadRect[i].width, loadRect[i].height);
-
+			if(end == false)
+				g.drawRect(loadRect[i].x, loadRect[i].y, loadRect[i].width, loadRect[i].height);
+			else{ 
+				g.drawRect(0, 0, 120, 120);
+				g.drawRect(40, 40, 40, 40);
+			}
 		}
 	}
 }
